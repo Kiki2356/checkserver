@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
-import subprocess
+import socket
 
 app = Flask(__name__)
 DATABASE = 'database.db'
@@ -30,6 +30,14 @@ def get_servers():
     conn.close()
     return servers
 
+def check_server_status(server_url):
+    try:
+        host = socket.gethostbyname(server_url)
+        socket.create_connection((host, 80), timeout=5)
+        return True  # Server is reachable
+    except (socket.gaierror, socket.timeout, ConnectionRefusedError):
+        return False  # Server is unreachable
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -37,11 +45,10 @@ def index():
 @app.route('/check', methods=['POST'])
 def check():
     server_url = request.form['server_url']
-    try:
-        subprocess.check_output(["ping", "-c", "1", server_url])
+    if check_server_status(server_url):
         status = 'Server is running normally.'
         add_server(server_url, 'Running')
-    except subprocess.CalledProcessError:
+    else:
         status = 'Server is down.'
         add_server(server_url, 'Down')
 
@@ -64,4 +71,4 @@ def delete():
 
 if __name__ == '__main__':
     create_database()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
