@@ -1,42 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Server Down Checker</title>
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
-
+    <title>Server Check</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 100px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Server Down Checker</h1>
-
     <div class="container">
-        <h2>Servers Down</h2>
-        <table>
-            <tr>
-                <th>No.</th>
-                <th>URL</th>
-                <th>Action</th>
-            </tr>
-            {% for server in servers %}
-            <tr>
-                <td>{{ server[0] }}</td>
-                <td>{{ server[1] }}</td>
-                <td>
-                    <form action="/remove" method="post">
-                        <input type="hidden" name="server_id" value="{{ server[0] }}">
-                        <button type="submit">Remove</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-
-    <div class="container">
-        <h2>Check Server</h2>
-        <form action="/check" method="post">
-            <label for="server_url">Server URL:</label>
-            <input type="text" id="server_url" name="server_url" required>
-            <button type="submit">Check</button>
+        <h1 class="text-center">Server Check</h1>
+        <form method="POST" action="/check" class="text-center">
+            <div class="form-group">
+                <input type="text" name="server_url" placeholder="Enter Server URL" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Check Server</button>
         </form>
     </div>
 </body>
