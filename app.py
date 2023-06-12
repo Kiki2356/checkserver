@@ -1,5 +1,10 @@
 from flask import Flask, render_template, request
 import sqlite3
+import os
+
+host = os.getenv('IP', '0.0.0.0')
+port = int(os.getenv('PORT', 5000))
+
 
 app = Flask(__name__)
 db_name = 'servers.db'
@@ -62,4 +67,4 @@ def remove():
     return render_template('index.html', servers=servers)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host=host, port=port)
